@@ -2,16 +2,24 @@ name: GroupMe Auto Poster
 
 on:
   schedule:
-    # This runs exactly once every 5 minutes (GitHub's minimum scheduling interval)
+    # Triggers every 5 minutes to maintain the loop
     - cron: '*/5 * * * *'
-  workflow_dispatch: # Allows you to trigger it manually
+  workflow_dispatch: # For manual testing
 
 jobs:
   post-message:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Message to GroupMe
+      - name: Run 30 Second Message Loop
         run: |
-          curl -X POST "https://groupme.com" \
-          -H "Content-Type: application/json" \
-          -d "{\"message\": {\"text\": \"!fih\", \"source_guid\": \"$(uuidgen)\"}}"
+          for i in {1..10}
+          do
+            echo "Sending message $i..."
+            # FIXED: Targets the main group and routes directly into the sub-topic ID path
+            curl -X POST "https://groupme.com" \
+            -H "Content-Type: application/json" \
+            -d "{\"message\": {\"text\": \"!fih\", \"source_guid\": \"$(uuidgen)\"}}"
+            
+            echo "Waiting 30 seconds..."
+            sleep 30
+          done
