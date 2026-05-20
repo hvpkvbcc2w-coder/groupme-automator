@@ -1,0 +1,17 @@
+name: GroupMe Auto Poster
+
+on:
+  schedule:
+    # This runs exactly once every 5 minutes (GitHub's minimum scheduling interval)
+    - cron: '*/5 * * * *'
+  workflow_dispatch: # Allows you to trigger it manually
+
+jobs:
+  post-message:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Message to GroupMe
+        run: |
+          curl -X POST "https://groupme.com" \
+          -H "Content-Type: application/json" \
+          -d "{\"message\": {\"text\": \"!fih\", \"source_guid\": \"$(uuidgen)\"}}"
